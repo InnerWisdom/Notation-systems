@@ -1,0 +1,85 @@
+using System;
+namespace ConsoleApp7
+{
+    class Program
+    {
+        public static long converttodec(long ch, long osn)
+        {
+            long k = 0;
+            long razr = (ch.ToString()).Length;
+            for (int i = 0; i < razr; i++)
+            {
+                k = (k + ((ch % 10) * (int)(Math.Pow(osn, i))));
+                ch = ch / 10;
+            }
+            return k;
+        }
+        public static string DecimalToArbitrarySystem(long decimalNumber, int radix)
+        {
+            const int BitsInLong = 64;
+            const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (radix < 2 || radix > Digits.Length)
+                throw new ArgumentException("The radix must be >= 2 and <= " + Digits.Length.ToString());
+            if (decimalNumber == 0)
+                return "0";
+            int index = BitsInLong - 1;
+            long currentNumber = Math.Abs(decimalNumber);
+            char[] charArray = new char[BitsInLong];
+            while (currentNumber != 0)
+            {
+                int remainder = (int)(currentNumber % radix);
+                charArray[index--] = Digits[remainder];
+                currentNumber = currentNumber / radix;
+            }
+            string result = new String(charArray, index + 1, BitsInLong - index - 1);
+            if (decimalNumber < 0)
+            {
+                result = "-" + result;
+            }
+            return result;
+        }
+        static void Main(string[] args)
+        {
+            int[] array = new int[5];
+            int i = 0;
+            string strf = Console.In.ReadLine();
+            string[] words = strf.Split(' ');
+            foreach (var word in words)
+            {
+                array[i] = Convert.ToInt32(word);
+                i++;
+            }
+            string numb = Console.In.ReadLine();
+            long k = 0;
+            if (array[0]>10)
+            {
+                char[] chisl = numb.ToCharArray();
+                for (int i1 = numb.Length-1, i4 = 0; i1 >= 0; i1--,i4++)
+                {
+                    if (chisl[i1] > 47 && chisl[i1] < 58)
+                    {
+                    k += (chisl[i1]-48) * (long)Math.Pow(array[0], i4);
+                    }
+                    else if (chisl[i1] > 64 && chisl[i1] < 91)
+                    {
+                        k += (chisl[i1] - 65+10) * (long)(Math.Pow(array[0], i4));
+                    }
+                    else if (chisl[i1] > 96 && chisl[i1] < 123)
+                    {
+                        k += (chisl[i1] - 97+10) * (long)(Math.Pow(array[0], i4));
+                    }
+                }
+                string i5 = DecimalToArbitrarySystem(k, array[1]);
+                Console.WriteLine(i5);
+            }
+            else 
+            {
+                long chisl = Convert.ToInt64(numb);
+                long k1 = converttodec(chisl, array[0]);
+                string i4 = DecimalToArbitrarySystem(k1, array[1]);
+                Console.WriteLine(i4);
+            }
+        }
+    }
+
+}
